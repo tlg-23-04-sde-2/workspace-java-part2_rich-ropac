@@ -2,15 +2,18 @@ package com.entertainment;
 
 import java.util.Objects;
 
-public class Television {
-
+/*
+ *  Natural order is defined by brand (String).
+ *
+ *  NOTE:  be consistent with equals, natural order must use the
+ *  same properties that are used in equals().
+ */
+public class Television implements Comparable<Television>{
     private String brand;
     private int volume;
-
     private Tuner tuner = new Tuner();
 
     public Television() {
-
     }
 
     public Television(String brand, int volume) {
@@ -19,7 +22,6 @@ public class Television {
     }
 
     //METHODS
-
     public int getCurrentChannel() {
         return tuner.getChannel();     //delegate to contained Tuner object
     }
@@ -47,6 +49,16 @@ public class Television {
     }
 
     @Override
+    public int compareTo(Television other) {
+        int result = this.getBrand().compareTo(other.getBrand());
+
+        if (result == 0) {  //tied on brand, break the tie by volume
+            result = Integer.compare(this.getVolume(), other.getVolume());
+        }
+        return result;
+    }
+
+    @Override
     public int hashCode() {
         // poorly written hash function, because it easily yields "hash collision"
         // a "hash collision" is when different objects hash to the same value (dumb luck)
@@ -56,7 +68,6 @@ public class Television {
         // delegate to Objects.hash(), which uses a "good" hash function to minimize collisions
         return Objects.hash(getBrand(), getVolume());
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -76,10 +87,9 @@ public class Television {
 
     @Override
     public String toString() {
-        return "Television{" +
-                "brand='" + getBrand() + '\'' +
+        return "Television: " +
+                "brand=" + getBrand() +
                 ", volume=" + getVolume() +
-                ", tuner=" + tuner +
-                '}';
+                ", currentChannel=" + getCurrentChannel();
     }
 }
