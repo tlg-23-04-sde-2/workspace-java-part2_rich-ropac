@@ -87,7 +87,8 @@ public class InMemoryCatalog implements Catalog {
 
     @Override
     public Collection<MusicItem> getAll() {
-        return catalogData.subList(0,catalogData.size());
+        // Returning a read-only view of catalogData
+        return Collections.unmodifiableCollection(catalogData);
     }
 
     /**

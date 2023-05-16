@@ -30,7 +30,7 @@ class InMemoryCatalogTest {
         // testFindByKeyword();                 //Completed
         // testFindByCategory();                //Completed
         // testSize();                          //Completed
-        // testGetAll();                        //Completed
+        testGetAll();                        //Completed
 
         // testFindSelfTitleAlbums();                  //Completed
         // testFindRockItemsAtSpecifiedPrice();        //Completed
@@ -41,7 +41,7 @@ class InMemoryCatalogTest {
         // testIsAllItemsPricedAt10();                 //Completed
         // testIsItemsSoldByCategory();                //Completed
         // testFindTitlesForCategory();                //Completed
-        testFindSpecificYearAndPrice();
+        // testFindSpecificYearAndPrice();             //Commplete
     }
 
     private static void testFindById() {
