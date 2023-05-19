@@ -3,10 +3,7 @@ package com.duckrace;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /*
  * This is a lookup table of ids to student names.
@@ -45,9 +42,44 @@ class Board {
     private final Map<Integer,String> studentIdMap = loadStudentIdMap();
     private final Map<Integer,DuckRacer> racerMap  = new TreeMap<>();
 
+    /*
+     *  Updates the board (racerMap) by making a DuckRacer 'win'.
+     *  This could mean fetching an existing DuckRacer from racerMap,
+     *  or we might need to create a new DuckRacer and put in the map.
+     *  Either way, we need to make it 'win'.
+     */
+    public void update(int id, Reward reward) {
+        DuckRacer racer = null;
+
+        if (racerMap.containsKey(id)) {  // id exists in racerMap, so get DuckRacer next to it
+            racer = racerMap.get(id);
+
+        } else {
+            racer = new DuckRacer(id, studentIdMap.get(id));
+            racerMap.put(id, racer);
+        }
+        racer.win(reward);
+    }
+
     // FOR TEST PURPOSES
     void dumpStudentIdMap() {
         System.out.println(studentIdMap);
+    }
+    // show the DuckRacers (only), ie, the right side of the map
+    // TODO: render this data "pretty, " for display to the end user.
+    public void show() {
+        Collection<DuckRacer> racers = racerMap.values();
+        System.out.println();
+        System.out.println("            Duck Race Results");
+        System.out.println("            =================");
+        System.out.println();
+        System.out.println("ID      Name      Wins     Rewards");
+        System.out.println("--      ----      ----     -------");
+
+
+        for (DuckRacer racer : racers) {
+            System.out.printf("%2s      %-6s     %2s      %s\n", racer.getId(), racer.getName(), racer.getWins(), racer.getRewards());
+        }
     }
 
     private Map<Integer, String> loadStudentIdMap() {
@@ -70,5 +102,6 @@ class Board {
 
         return idMap;
     }
+
 
 }
