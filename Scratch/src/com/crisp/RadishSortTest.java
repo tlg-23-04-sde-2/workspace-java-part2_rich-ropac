@@ -23,7 +23,7 @@ class RadishSortTest {
         dump(radishes);
         System.out.println();
 
-        System.out.println("Sory by tailLength, via anonymous Comparator");
+        System.out.println("Sort by tailLength, via anonymous Comparator");
         radishes.sort( new Comparator<Radish>() {
 
             @Override
