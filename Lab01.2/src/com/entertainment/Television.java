@@ -58,7 +58,27 @@ public class Television implements Comparable<Television>{
         return result;
     }
 
-    @Override
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) return true;
+//
+//        // is obj null? OR
+//        // is obj a different type than me?
+//        // comparing Class objects is an EXACT type check (not an IS-A match)
+//        if (obj == null || this.getClass() != obj.getClass()) return false;
+//
+//        Television that = (Television) obj;
+//
+//        return this.getVolume() == that.getVolume() && Objects.equals(this.getBrand(), that.getBrand());
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(getBrand(), getVolume());
+//    }
+
+
+        @Override
     public int hashCode() {
         // poorly written hash function, because it easily yields "hash collision"
         // a "hash collision" is when different objects hash to the same value (dumb luck)
@@ -73,8 +93,8 @@ public class Television implements Comparable<Television>{
     public boolean equals(Object obj) {
         boolean result = false;
 
-        // only proceed if 'obj' is a reference to another Television object
-        if (obj instanceof Television) {
+        // only proceed if 'obj' is a reference to another Television object (EXACT type match)
+        if (this.getClass() == obj.getClass()) {
             // downcast 'obj' to more specific Television, so we can call Television methods
             Television other = (Television) obj;
 

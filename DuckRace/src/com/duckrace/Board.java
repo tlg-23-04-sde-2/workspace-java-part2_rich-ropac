@@ -70,15 +70,15 @@ class Board {
     public void show() {
         Collection<DuckRacer> racers = racerMap.values();
         System.out.println();
-        System.out.println("            Duck Race Results");
-        System.out.println("            =================");
+        System.out.println("         Duck Race Results");
+        System.out.println("         =================");
         System.out.println();
-        System.out.println("ID      Name      Wins     Rewards");
-        System.out.println("--      ----      ----     -------");
+        System.out.printf("%2s   %-10s    %4s   %s \n", "ID", "Name", "Wins", "Rewards");
+        System.out.printf("%2s   %-10s   %4s   %s \n", "--", "-----------", "----", "-----------------------");
 
 
         for (DuckRacer racer : racers) {
-            System.out.printf("%2s      %-6s     %2s      %s\n", racer.getId(), racer.getName(), racer.getWins(), racer.getRewards());
+            System.out.printf("%2s   %-10s   %4s    %s \n", racer.getId(), racer.getName(), racer.getWins(), racer.getRewards());
         }
     }
 
@@ -102,6 +102,4 @@ class Board {
 
         return idMap;
     }
-
-
 }
