@@ -1,6 +1,6 @@
 package com.duckrace;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -38,9 +38,43 @@ import java.util.*;
  *   17       17    Dom        1    DEBIT_CARD
  */
 
-public class Board {
+public class Board implements Serializable {
+    // class-level common area (static)
+    private static final String dataFilePath = "data/board.date";
+    private static final String studentIdFilePath = "conf/student-ids.csv";
+
+    /*
+     *  If data/board.dat exists, read a Board object from that file.
+     *  otherwise create new and return it.
+     *  This uses Java's built-in Object Serialization facility.
+     */
+
+    public static Board getInstance() {
+        Board board = null;
+
+        if (Files.exists(Path.of(dataFilePath))) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(dataFilePath))) {
+                board = (Board) in.readObject();
+
+            }
+            catch(Exception e) {
+                e.printStackTrace();;
+            }
+        } else {
+            board = new Board();
+        }
+        return board;
+    }
+
+
+    //instance variable, present in each Board object
     private final Map<Integer,String> studentIdMap = loadStudentIdMap();
     private final Map<Integer,DuckRacer> racerMap  = new TreeMap<>();
+
+    // CONSTRUCTORS - this one is private, to prevent outside instantiation (only I can create new)
+    private Board() {
+
+    }
 
     /*
      *  Updates the board (racerMap) by making a DuckRacer 'win'.
@@ -59,23 +93,28 @@ public class Board {
             racerMap.put(id, racer);
         }
         racer.win(reward);
+        save();
     }
 
     // FOR TEST PURPOSES
+
     void dumpStudentIdMap() {
         System.out.println(studentIdMap);
     }
     // show the DuckRacers (only), ie, the right side of the map
     // TODO: render this data "pretty, " for display to the end user.
     public void show() {
-        Collection<DuckRacer> racers = racerMap.values();
-        System.out.println();
-        System.out.println("         Duck Race Results");
-        System.out.println("         =================");
-        System.out.println();
-        System.out.printf("%2s   %-10s    %4s   %s \n", "ID", "Name", "Wins", "Rewards");
-        System.out.printf("%2s   %-10s   %4s   %s \n", "--", "-----------", "----", "-----------------------");
-
+        if (racerMap.isEmpty()) {
+            System.out.println("Not current results stored");
+        } else {
+            System.out.println();
+            System.out.println("         Duck Race Results");
+            System.out.println("         =================");
+            System.out.println();
+            System.out.printf("%2s   %-10s    %4s   %s \n", "ID", "Name", "Wins", "Rewards");
+            System.out.printf("%2s   %-10s   %4s   %s \n", "--", "-----------", "----", "-----------------------");
+        }
+            Collection<DuckRacer> racers = racerMap.values();
 
         for (DuckRacer racer : racers) {
             String rewardsString = racer.getRewards().toString();
@@ -86,6 +125,18 @@ public class Board {
 
 
             System.out.println(row);
+        }
+    }
+
+    /*
+     *  Save this Board object to binary file "data/board.dat"
+     */
+    private void save() {
+        try (ObjectOutputStream out = new ObjectOutputStream((new FileOutputStream("data/board.dat")))) {
+            out.writeObject(this);    // write "me" (a Board object) to the binary file
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
